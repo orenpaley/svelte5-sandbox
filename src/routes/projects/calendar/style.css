@@ -1,0 +1,274 @@
+
+.calendar-page-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  border: 2px solid black;
+  height: 75vh;
+  margin: 5px;
+  background-color: lightgreen;
+  position: sticky;
+  top: 25%;
+}
+.calendar-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: aliceblue;
+  overflow: hidden;
+}
+
+.calendar {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow-x: auto;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.calendar-body {
+
+  border: 1px blue solid;
+  margin: 6px;
+  width: 100%;
+  overflow-y:auto;
+  display: flex;
+  overflow-x: hidden;
+  height: 100vh;
+
+}
+
+.calendar-body-day {
+  overflow-x: auto;
+}
+
+.table-header {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  top: 0;
+  margin: 7px;
+}
+
+
+.calendar-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 6px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 9vh;
+  margin: 18px 0;
+
+}
+
+.change-view-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  position: sticky;
+  top: 0;
+  height: fit-content;
+  align-self: center;
+}
+
+.change-week-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  position: sticky;
+  top: 0;
+}
+
+
+.weekday {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width:100%;
+}
+
+.weekday-header {
+  background-color: yellow;
+  width: 100%;
+  border-left: 2px black solid;
+  flex: 1 1 auto;
+  display: flex;
+  padding-left: 2px;
+}
+
+.day-area {
+  border: 1px green solid;
+  width: 100%
+}
+
+.active-day-area {
+  background: lightblue;
+}
+
+.hours-day-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+
+.single-day {
+  width: 100%;
+}
+.hours-day-area-horizontal {
+  display: flex;
+  flex-direction: row;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.hour-area-horizontal {
+  width: 8em;
+  border-left: 1px dashed lightslategray;
+  height: 175vh;
+}
+
+.hour-area {
+  height: 3.3em;
+  color: lightslategray;
+  font-size: 0.8rem;
+}
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  flex: 3 1 0;
+  top: 0;
+  display: flex;
+  overflow-x: auto;
+
+}
+.header-section {
+  position: sticky;
+  top: 0;
+  background-color: green;
+  z-index: 2;
+}
+/* 
+.header-columns {
+  display: flex;
+} */
+/* 
+.header-column {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  white-space: nowrap;
+  background-color: green;
+  position: sticky;
+  top: 0;
+}
+
+.content-section {
+  flex: 1;
+  overflow-y: auto;
+  height: calc(100vh - 150px);
+  display: flex;
+  flex-direction: column;
+}
+
+.parent-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sidebar-section {
+  flex: 1 1 0;
+  overflow-y: auto;
+  border: 1px solid darkred;
+  margin: 10px;
+  padding: 10px;
+  width: 100px;
+}
+
+.header-container {
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.parent-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow: hidden;
+  position: sticky; /* Make the entire parent container sticky */
+
+/* .header-section {
+  background-color: green;
+}
+
+.header-columns {
+  display: flex;
+}
+
+.header-column {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  white-space: nowrap;
+  background-color: green;
+}
+
+.content-container {
+  overflow-y: auto;
+  height: calc(100vh - 150px);
+  display: flex;
+
+}
+
+.sidebar-section {
+  flex: 1 1 0;
+  overflow-y: auto;
+  border: 1px solid darkred;
+  margin: 10px;
+  padding: 10px;
+  width: 100px;
+}
+ */
+
+ .calendar-body-month {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
+ }
+
+ .week-in-month {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+ }
+
+ .day-in-month {
+  border: lightseagreen 1px solid;
+  width: 9em;
+  height: 6em;
+ }
+
+ .not-active-month {
+  border: lightslategray 1px solid;
+  background-color: lightgrey;
+ }
