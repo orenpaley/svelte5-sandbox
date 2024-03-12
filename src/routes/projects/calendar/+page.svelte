@@ -1,44 +1,26 @@
 <script>
-	import calendarProps from './calendarProps';
-	import DayView from './DayView.svelte';
-	import WeekView from './WeekView.svelte';
-	import MonthView from './MonthView.svelte';
-
+	import DayView from './dayView.svelte';
+	import WeekView from './weekView.svelte';
+	import MonthView from './monthView.svelte';
 	import '../calendar/style.css';
 
-	let view = 'week';
-	let timezone = 'UTC';
+	let view = $state('week');
 
-	const handleChangeTimezone = (e) => {
-		timezone = e.target.value;
-	};
-
-	const handleChangeView = (e) => {
+	function handleChangeView(e) {
 		view = e.target.value;
-	};
+	}
 </script>
 
 <div class="calendar">
 	<div class="calendar-page-container">
 		<!-- <div className="sidebar"></div> -->
-		<select bind:value={view} on:change={handleChangeView}>
-			<option value="day">Day</option>
-			<option value="week">Week</option>
-			<option value="month">Month</option>
-		</select>
 
 		{#if view === 'day'}
-			<DayView props={calendarProps} {view} {handleChangeView} {timezone} {handleChangeTimezone} />
+			<DayView changeView={handleChangeView} {view} />
 		{:else if view === 'month'}
-			<MonthView
-				props={calendarProps}
-				{view}
-				{handleChangeView}
-				{timezone}
-				{handleChangeTimezone}
-			/>
+			<MonthView changeView={handleChangeView} {view} />
 		{:else}
-			<WeekView props={calendarProps} {view} {handleChangeView} {timezone} {handleChangeTimezone} />
+			<WeekView changeView={handleChangeView} {view} />
 		{/if}
 	</div>
 </div>

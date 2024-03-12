@@ -1,6 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill';
 
-const props = {
+const myProps = {
 	weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 	months: [
 		'January',
@@ -397,4 +397,4 @@ const props = {
 	]
 };
 
-export default props;
+export default myProps;
