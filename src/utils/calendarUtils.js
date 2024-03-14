@@ -67,3 +67,77 @@ export function parseYYYYMMDDtoDate(yyyymmdd) {
 
 	return new Date(year, month, day);
 }
+
+export function renderEvent(event) {
+	return {
+		startDate: event.startDate,
+		endDate: event.endDate,
+		startTime: event.startTime,
+		endTime: event.endTime,
+		title: event.title,
+		description: event.description,
+		location: event.location,
+		timezone: event.timezone,
+		type: event.type,
+		allDay: event.allDay
+	};
+}
+
+export function createEventDictionary(events) {
+	const eventDictionary = {};
+
+	// Iterate over each event object
+
+	events.forEach((event) => {
+		// Extract the date from the startDate
+		const startDate = event.startDate.toPlainDate();
+
+		// Convert date to ISO string format (yyyy-mm-dd)
+		const dateString = startDate.toString();
+
+		// Check if the date already exists in the dictionary
+		if (eventDictionary[dateString]) {
+			eventDictionary[dateString] = [...eventDictionary[dateString], event];
+		} else {
+			// Date does not exist, create a new array with the event
+			eventDictionary[dateString] = new Array(event);
+		}
+	});
+	console.log('event dict generated', eventDictionary);
+	return eventDictionary;
+}
+
+export function createDateDictionary(dates) {
+	const dateDictionary = {};
+
+	// Iterate over each date object
+	dates.forEach((date) => {
+		// Convert date to ISO string format (yyyy-mm-dd)
+		let dateString = date.date.toPlainDate().toString();
+		dateDictionary[dateString] = { date };
+	});
+	return dateDictionary;
+}
+
+export const mergeDatesEvents = (dateDictionary, eventDictionary) => {
+	// Get the date and event dictionaries
+	const dates = dateDictionary();
+	const events = eventDictionary();
+
+	// Create a merged dictionary
+	let merged = {};
+
+	// Iterate over the keys of the event dictionary
+	Object.keys(dates).forEach((dateKey) => {
+		// Check if the date key exists in the date dictionary
+		if (events.hasOwnProperty(dateKey)) {
+			// Add the events to the corresponding date in the date dictionary
+			merged[dateKey] = { ...dates[dateKey], events: events[dateKey] };
+		} else {
+			// If the date key does not exist in the date dictionary, add it with the events
+			merged[dateKey] = { date: dateKey, events: [] };
+		}
+	});
+
+	return merged;
+};

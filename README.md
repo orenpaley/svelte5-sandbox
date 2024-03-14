@@ -9,7 +9,7 @@ npm run dev
 npm run dev -- --open
 ```
 ## Go To
-Projects > Calendar to see what I amcurrently working on
+Projects > Calendar to see what I am currently working on
 
 ## Made With
 SvelteKit2
