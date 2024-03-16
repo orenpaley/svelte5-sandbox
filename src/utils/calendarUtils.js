@@ -103,7 +103,7 @@ export function createEventDictionary(events) {
 			eventDictionary[dateString] = new Array(event);
 		}
 	});
-	console.log('event dict generated', eventDictionary);
+
 	return eventDictionary;
 }
 

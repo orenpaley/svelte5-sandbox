@@ -41,8 +41,10 @@
 	$effect(() => {
 		// this can be done adding nav.navStatus directly to DOM element
 		// without using effect
+		console.log('merged Dates', mergedDates());
 		console.log('dates', dates);
-		console.log('merged dates', mergedDates());
+		console.log(dates[0].date.toPlainDate().toString());
+		console.log('EVENTS ON DATE', mergedDates()[dates[0].date.toPlainDate().toString()].events);
 		isOpen = dropdown.isOpen;
 	});
 
@@ -62,14 +64,6 @@
 	};
 
 	// Function to calculate top position of event overlay based on event time
-	function calculateTopPosition(time) {
-		// Parse the time string into hours and minutes
-		const [hours, minutes] = time.split(':').map(Number);
-		// Calculate the total minutes since midnight
-		const totalMinutes = hours * 60 + minutes;
-		// Calculate the top position based on the height of each hour division
-		return totalMinutes * (100 / 24) + '%';
-	}
 </script>
 
 <div class="calendar-header dark:bg-slate-800">
@@ -128,38 +122,51 @@
 	</div>
 
 	<div class="week-calendar-container relative w-full">
-		<div class="grid grid-cols-7 gap-0 bg-slate-700 text-slate-200">
-			{#each dates as date}
-				<div class="grid-rows-24 grid grid-cols-1">
-					<div class="font-bold">{date.weekday}</div>
-					{#each Array(24) as _, hour}
-						<div
-							class={`hour-${hour + 1} week-${date.weekday} relative rounded-md border border-gray-300`}
-							data-x={date.index + 1}
-							data-y={hour + 1}
-						>
-							{hour + 1}
-							{#if mergedDates()[date.date.toPlainDate().toString()]}
-								<div class="inline-grid">
-									{#each mergedDates()[date.date.toPlainDate().toString()].events as event}
-										{#if event.startTime.slice(0, 2) == hour + 1}
-											<div
-												class="event z-index-2 absolute col-start-1 col-end-4 row-start-1 row-end-4 bg-green-500"
-											>
-												Event {event.startTime}
-											</div>
-										{/if}
-									{/each}
-								</div>
-							{/if}
-						</div>
-					{/each}
+		<!-- Background grid with days and hours -->
+		<div
+			class="grid-rows-25 absolute grid h-[75vh] max-h-[75vh] w-full grid-cols-7 overflow-y-scroll"
+		>
+			{#each dates as day, i}
+				<div
+					class="grid-item sticky top-0 m-2 grid border border-4 border-green-400 bg-gray-200 p-4"
+					style="grid-row: 1; grid-column: {i + 1};"
+				>
+					{day.weekday}
 				</div>
+				{#each myProps.hours as hour}
+					<div
+						class="grid-item z-index-1 border border-gray-400 bg-gray-200 p-3"
+						style="grid-row: {Number(hour) + 1}; grid-column: {i + 1};"
+					>
+						{hour}:00
+					</div>
+				{/each}
+			{/each}
+		</div>
+
+		<!-- Events overlay grid -->
+		<div
+			class="grid-rows-25 z-index-10 absolute grid h-[75vh] max-h-[75vh] w-full grid-cols-7 overflow-y-scroll"
+		>
+			<!-- Render events -->
+			{#each Object.entries(mergedDates()) as [key, { date, events }]}
+				{#each events as event}
+					<div
+						class="grid-item border-3 border border-black bg-green-500 p-0"
+						style="text-overflow: ellipsis;
+						 grid-row: {event.startTime.slice(0, 2)}; grid-row-end: {event.endTime.slice(
+							0,
+							2
+						)}; grid-column: {date.key + 1};
+						"
+					>
+						{event.title}
+					</div>
+				{/each}
 			{/each}
 		</div>
 	</div>
 </div>
-
 <!-- <div class="calendar-container">
 		<div class="calendar-body">
 			{#each dates as date, index}
@@ -211,3 +218,17 @@
 			{/each}
 		</div>
 	</div> -->
+
+<!-- 
+<div class="grid-container grid-rows-25 grid grid-cols-7 gap-5">
+
+	{#each events as event}
+		<div
+			class="event grid-item border border-blue-400 bg-blue-200 p-2"
+			style="grid-row: {event.startHour + 1}; 
+							grid-column: {event.day + 1} / span {event.span};"
+		>
+			{event.title}
+		</div>
+	{/each}
+</div> -->

@@ -247,6 +247,8 @@
 }
  */
 
+ /* GRID TEST */
+
  .calendar-body-month {
   display: flex;
   width: 100%;
@@ -277,3 +279,24 @@
   position: sticky;
   top: 0;
  }
+
+
+ .grid-container {
+  display: grid;
+  position: relative;
+}
+
+/* .grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}  */
+
+/* .event {
+  background-color: lightblue;
+  border: 1px solid blue;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: .6;
+} */
