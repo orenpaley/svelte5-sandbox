@@ -163,7 +163,7 @@
 	<div class="m-auto flex max-w-[80vw] flex-row">
 		{#each dates as day, i}
 			<div
-				class="grid-item m-0 m-0 h-full w-full border border-4 border-green-400 bg-gray-200 p-0 text-center"
+				class="border-right-2 border-slate-20 m-0 m-0 h-full w-full border-x-2 p-0 text-center text-slate-200"
 				style="grid-row: 1; grid-column: {i + 1};"
 			>
 				<h3 class="font-bold">{day.weekday}</h3>
@@ -175,37 +175,40 @@
 		{/each}
 	</div>
 	<!-- Calendar Main -->
-	<div class="week-calendar-container m-auto max-w-[80vw]">
-		<div
-			class="grid-container relative h-[75vh] max-h-[75vh] min-h-[75vh] w-full max-w-[100vw] overflow-auto"
-		>
-			<!-- Grid -->
-			<div
-				class="grid-rows-25 absolute m-0 grid h-[75vh] max-h-[75vh] min-h-[75vh] w-full max-w-[100vw] grid-cols-7 p-0"
-			>
-				{#each dates as day, i}
-					{#each myProps.hours as hour}
+
+	<!-- Grid -->
+	<div
+		class="grid-rows-25 m-auto grid h-[75vh] max-h-[75vh] min-h-[75vh] max-w-[80vw] grid-cols-7 overflow-auto p-0"
+	>
+		{#each dates as day, i}
+			{#each myProps.hours as hour}
+				<div
+					class="z-index-1 min-h-[5vh] min-w-[9vh] p-0 text-slate-400"
+					style="grid-row: {Number(hour) + 1}; grid-column: {i + 1};"
+				>
+					{hour}:00
+				</div>
+				{#each Object.entries(mergedDates()) as [key, { date, events }]}
+					{#each events as event}
 						<div
-							class="z-index-1 min-h-[5vh] min-w-[9vh] border border-gray-400 bg-gray-200 p-0"
-							style="grid-row: {Number(hour) + 1}; grid-column: {i + 1};"
+							class="z-index-15 min-h-[5vh] min-w-[9vh] overflow-clip border border-black bg-green-400 p-0 opacity-5"
+							style="text-overflow: ellipsis; grid-row: {Number(event.startTime.slice(0, 2)) +
+								1}; grid-row-end: {Number(event.endTime.slice(0, 2)) + 1}; grid-column: {date.key +
+								1};"
 						>
-							{hour}:00
+							<div>
+								<h4 class="text-sm font-bold">{event.title}</h4>
+								<p class="text-purple-700">{event.location}</p>
+								<p class="text-sm font-light italic">
+									{event.description.length > 8
+										? event.description.slice(0, 8) + '...'
+										: event.description}
+								</p>
+							</div>
 						</div>
-						{#each Object.entries(mergedDates()) as [key, { date, events }]}
-							{#each events as event}
-								<div
-									class="z-index-15 min-h-[5vh] min-w-[9vh] overflow-clip border border-black bg-green-400 p-0 opacity-5"
-									style="text-overflow: ellipsis; grid-row: {Number(event.startTime.slice(0, 2)) +
-										1}; grid-row-end: {Number(event.endTime.slice(0, 2)) +
-										1}; grid-column: {date.key + 1};"
-								>
-									{event.title}
-								</div>
-							{/each}
-						{/each}
 					{/each}
 				{/each}
-			</div>
-		</div>
+			{/each}
+		{/each}
 	</div>
 </div>
