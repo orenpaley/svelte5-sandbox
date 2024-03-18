@@ -53,7 +53,7 @@ export const mockEvents = [
 	},
 	{
 		startDate: defaultDate.subtract({ days: 3 }),
-		endDate: defaultDate.subtract({ days: 2 }),
+		endDate: defaultDate.subtract({ days: 1 }),
 		startTime: `07:00`,
 		endTime: `09:00`,
 		title: 'All The things',

@@ -11,33 +11,10 @@ export function milli() {
 
 export function getWeekRange(currentDay = Temporal.Now.plainDateISO()) {
 	let startWeek, endWeek;
+	const dayOfWeek = currentDay.dayOfWeek;
+	startWeek = currentDay.subtract({ days: dayOfWeek - 1 });
+	endWeek = currentDay.add({ days: 7 - dayOfWeek });
 
-	console.log('current day weekday', currentDay.dayOfWeek);
-
-	if (currentDay.dayOfWeek === 1) {
-		startWeek = currentDay;
-		endWeek = currentDay.add({ days: 6 });
-	} else if (currentDay.dayOfWeek === 2) {
-		startWeek = currentDay.subtract({ days: 1 });
-		endWeek = currentDay.add({ days: 5 });
-	} else if (currentDay.dayOfWeek === 3) {
-		startWeek = currentDay.subtract({ days: 2 });
-		endWeek = currentDay.add({ days: 4 });
-	} else if (currentDay.dayOfWeek === 4) {
-		startWeek = currentDay.subtract({ days: 3 });
-		endWeek = currentDay.add({ days: 3 });
-	} else if (currentDay.dayOfWeek === 5) {
-		startWeek = currentDay.subtract({ days: 4 });
-		endWeek = currentDay.add({ days: 2 });
-	} else if (currentDay.dayOfWeek === 6) {
-		startWeek = currentDay.subtract({ days: 5 });
-		endWeek = currentDay.add({ days: 1 });
-	} else if (currentDay.dayOfWeek === 7) {
-		startWeek = currentDay.subtract({ days: 6 });
-		endWeek = currentDay;
-	}
-
-	console.log('WEEK RANGE CHECKER: ', startWeek.day, endWeek.day);
 	return [startWeek, endWeek];
 }
 

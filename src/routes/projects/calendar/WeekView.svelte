@@ -15,6 +15,8 @@
 	let weekStart = $state(weekRange[0]);
 	let weekEnd = $state(weekRange[1]);
 
+	let dragging = $state(false);
+
 	let { changeView, view, events } = $props();
 
 	// UI RELATED VARIABLES
@@ -41,10 +43,7 @@
 	$effect(() => {
 		// this can be done adding nav.navStatus directly to DOM element
 		// without using effect
-		console.log('merged Dates', mergedDates());
-		console.log('dates', dates);
-		console.log(dates[0].date.toPlainDate().toString());
-		console.log('EVENTS ON DATE', mergedDates()[dates[0].date.toPlainDate().toString()].events);
+
 		isOpen = dropdown.isOpen;
 	});
 
@@ -63,11 +62,51 @@
 		weekEnd = changedMonthEnd;
 	};
 
+	function startDragging(event, eventData) {
+		dragging = true;
+		const rect = event.target.getBoundingClientRect();
+		let startX = Math.round((event.clientX - rect.left) / 180);
+		let startY = Math.round((event.clientY - rect.top) / 50);
+		console.log('START X', startX, 'START Y', startY);
+
+		const handleMouseMove = (e) => {
+			if (!dragging) return;
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+			eventData.x = x;
+			eventData.y = y;
+			console.log('x', eventData.x, 'y', eventData.y);
+		};
+
+		const handleMouseUp = () => {
+			if (!dragging) return;
+			dragging = false;
+
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+			console.log('event time br change', eventData.startTime);
+			let xResult = eventData.startDate.dayOfWeek + Math.round(eventData.x / 180);
+			let yResult = Math.round(eventData.startTime.split(':')[0] - eventData.y / 50);
+
+			// Update event data with new position
+			eventData.startTime = `${yResult.toString().padStart(2, '0')}:00`;
+			eventData.endTime = `${(yResult + 1).toString().padStart(2, '0')}:00`;
+			// eventData.startDate = eventData.startDate.add({ days: Math.floor(xResult) });
+			console.log('event time after change', eventData.startTime);
+
+			// You may want to save this data somewhere, like updating it in your data store
+			events = [...events];
+		};
+
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
+	}
+
 	// Function to calculate top position of event overlay based on event time
 </script>
 
-<div class="calendar-header dark:bg-slate-800">
-	<div class="flex content-center items-start">
+<div class="calendar-header absolute overflow-hidden dark:bg-slate-800">
+	<div class="m-[2vw] flex content-center items-start">
 		<Card class="m-auto text-center" size="lg" padding="xl">
 			<div class="flex">
 				<div class="flex-1">
@@ -120,115 +159,53 @@
 			</div>
 		</Card>
 	</div>
-
-	<div class="week-calendar-container relative w-full">
-		<!-- Background grid with days and hours -->
-		<div
-			class="grid-rows-25 absolute grid h-[75vh] max-h-[75vh] w-full grid-cols-7 overflow-y-scroll"
-		>
-			{#each dates as day, i}
-				<div
-					class="grid-item sticky top-0 m-2 grid border border-4 border-green-400 bg-gray-200 p-4"
-					style="grid-row: 1; grid-column: {i + 1};"
-				>
-					{day.weekday}
+	<!-- Calendar Header -->
+	<div class="m-auto flex max-w-[80vw] flex-row">
+		{#each dates as day, i}
+			<div
+				class="grid-item m-0 m-0 h-full w-full border border-4 border-green-400 bg-gray-200 p-0 text-center"
+				style="grid-row: 1; grid-column: {i + 1};"
+			>
+				<h3 class="font-bold">{day.weekday}</h3>
+				<div class="font-light italic">
+					{myProps.months[day.date.month - 1]}
+					{day.date.day}
 				</div>
-				{#each myProps.hours as hour}
-					<div
-						class="grid-item z-index-1 border border-gray-400 bg-gray-200 p-3"
-						style="grid-row: {Number(hour) + 1}; grid-column: {i + 1};"
-					>
-						{hour}:00
-					</div>
-				{/each}
-			{/each}
-		</div>
-
-		<!-- Events overlay grid -->
+			</div>
+		{/each}
+	</div>
+	<!-- Calendar Main -->
+	<div class="week-calendar-container m-auto max-w-[80vw]">
 		<div
-			class="grid-rows-25 z-index-10 absolute grid h-[75vh] max-h-[75vh] w-full grid-cols-7 overflow-y-scroll"
+			class="grid-container relative h-[75vh] max-h-[75vh] min-h-[75vh] w-full max-w-[100vw] overflow-auto"
 		>
-			<!-- Render events -->
-			{#each Object.entries(mergedDates()) as [key, { date, events }]}
-				{#each events as event}
-					<div
-						class="grid-item border-3 border border-black bg-green-500 p-0"
-						style="text-overflow: ellipsis;
-						 grid-row: {event.startTime.slice(0, 2)}; grid-row-end: {event.endTime.slice(
-							0,
-							2
-						)}; grid-column: {date.key + 1};
-						"
-					>
-						{event.title}
-					</div>
+			<!-- Grid -->
+			<div
+				class="grid-rows-25 absolute m-0 grid h-[75vh] max-h-[75vh] min-h-[75vh] w-full max-w-[100vw] grid-cols-7 p-0"
+			>
+				{#each dates as day, i}
+					{#each myProps.hours as hour}
+						<div
+							class="z-index-1 min-h-[5vh] min-w-[9vh] border border-gray-400 bg-gray-200 p-0"
+							style="grid-row: {Number(hour) + 1}; grid-column: {i + 1};"
+						>
+							{hour}:00
+						</div>
+						{#each Object.entries(mergedDates()) as [key, { date, events }]}
+							{#each events as event}
+								<div
+									class="z-index-15 min-h-[5vh] min-w-[9vh] overflow-clip border border-black bg-green-400 p-0 opacity-5"
+									style="text-overflow: ellipsis; grid-row: {Number(event.startTime.slice(0, 2)) +
+										1}; grid-row-end: {Number(event.endTime.slice(0, 2)) +
+										1}; grid-column: {date.key + 1};"
+								>
+									{event.title}
+								</div>
+							{/each}
+						{/each}
+					{/each}
 				{/each}
-			{/each}
+			</div>
 		</div>
 	</div>
 </div>
-<!-- <div class="calendar-container">
-		<div class="calendar-body">
-			{#each dates as date, index}
-				{console.log('date', date)}
-				{#if date.activeDay}
-					<div class="weekday" key={index}>
-						<div class="weekday-header">
-							{date.weekday}
-							{myProps.months[date.date.month - 1]}
-							{date.date.day}
-						</div>
-						<div class="day-area active-day-area">
-							<div class="hours-day-area">
-								{#each myProps.hours as hour, y}
-									<div
-										class="hour-area"
-										date={date.date.toString()}
-										data-time={hour}
-										data-x={index}
-										data-y={y}
-										key={hour}
-									>
-										{hour}
-									</div>
-								{/each}
-							</div>
-						</div>
-					</div>
-				{:else}
-					<div class="weekday" key={index}>
-						<div class="weekday-header">
-							<div>
-								{date.weekday}
-								{myProps.months[date.date.month - 1]}
-								{date.date.day}
-							</div>
-						</div>
-						<div class="day-area">
-							<div class="hours-day-area">
-								{#each myProps.hours as hour}
-									<div class="hour-area" key={hour}>
-										{hour}
-									</div>
-								{/each}
-							</div>
-						</div>
-					</div>
-				{/if}
-			{/each}
-		</div>
-	</div> -->
-
-<!-- 
-<div class="grid-container grid-rows-25 grid grid-cols-7 gap-5">
-
-	{#each events as event}
-		<div
-			class="event grid-item border border-blue-400 bg-blue-200 p-2"
-			style="grid-row: {event.startHour + 1}; 
-							grid-column: {event.day + 1} / span {event.span};"
-		>
-			{event.title}
-		</div>
-	{/each}
-</div> -->
